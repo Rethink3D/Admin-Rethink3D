@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, MessageSquare, Tag, ArrowRight } from "lucide-react";
+import {
+  Mail,
+  MessageSquare,
+  Tag,
+  ArrowRight,
+  Settings,
+  Bell,
+} from "lucide-react";
 import { usePageTitle } from "../../contexts/PageTitleContext";
 import "./Actions.css";
 
@@ -28,7 +35,7 @@ const Actions: React.FC = () => {
       title: "Notificações Push",
       description:
         "Envie notificações direto para o app móvel dos usuários (Em breve).",
-      icon: MessageSquare,
+      icon: Bell,
       path: "/actions/push",
       color: "var(--warning)",
       disabled: true,
@@ -42,6 +49,36 @@ const Actions: React.FC = () => {
       path: "/actions/coupons",
       color: "var(--success)",
       disabled: true,
+    },
+    {
+      id: "categories",
+      title: "Gerenciar Categorias",
+      description:
+        "Crie, edite e organize as categorias globais de produtos e solicitações.",
+      icon: Tag,
+      path: "/actions/categories",
+      color: "var(--primary)",
+      disabled: false,
+    },
+    {
+      id: "rules",
+      title: "Regras da Plataforma",
+      description:
+        "Defina taxas de serviço, prazos e configurações globais do sistema.",
+      icon: Settings,
+      path: "/actions/rules",
+      color: "var(--text-primary)",
+      disabled: false,
+    },
+    {
+      id: "feedbacks",
+      title: "Feedbacks dos Usuários",
+      description:
+        "Veja e gerencie as opiniões e sugestões enviadas pelos usuários.",
+      icon: MessageSquare,
+      path: "/actions/feedbacks",
+      color: "var(--primary-dark)",
+      disabled: false,
     },
   ];
 

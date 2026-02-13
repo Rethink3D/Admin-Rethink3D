@@ -128,6 +128,7 @@
 
 .sidebar-footer {
   padding: var(--spacing-lg);
+  padding-bottom: calc(var(--spacing-lg) + env(safe-area-inset-bottom, 20px));
   border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
@@ -137,12 +138,23 @@
 @media (max-width: 1024px) {
   .sidebar {
     transform: translateX(-100%);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
     box-shadow: var(--shadow-xl);
     z-index: var(--z-modal);
+    transition: transform var(--transition-base);
   }
 
   .sidebar.mobile-open {
     transform: translateX(0);
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
   }
 
   .sidebar.collapsed {

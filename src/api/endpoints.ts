@@ -6,5 +6,15 @@ export const API_ENDPOINTS = {
     ORDERS: "/admin/orders",
     CATEGORIES: "/admin/categories",
     EMAIL: "/admin/email",
+    FEEDBACKS: "/admin/feedbacks",
   },
+  ANALYTICS: {
+    OVERVIEW: "/analytics/overview",
+    TOP_EVENTS: "/analytics/top-events",
+    TOP_PRODUCTS: "/analytics/top-products",
+    TOP_MAKERS: "/analytics/top-makers",
+    DOWNLOAD_STATS: "/analytics/download-stats",
+    TOP_PAGES: "/analytics/top-pages",
+  },
+  CONSTANTS: "/constant",
 } as const;

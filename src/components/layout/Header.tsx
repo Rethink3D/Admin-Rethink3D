@@ -17,7 +17,6 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onToggleMobile }) => {
   useEffect(() => {
     const path = location.pathname;
 
-    // Determine page title based on route
     if (path === "/dashboard" || path === "/") {
       setPageTitle("Dashboard");
     } else if (path === "/makers") {
@@ -30,6 +29,12 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onToggleMobile }) => {
       setPageTitle("Produto");
     } else if (path === "/actions") {
       setPageTitle("Ações");
+    } else if (path === "/actions/categories") {
+      setPageTitle("Categorias");
+    } else if (path === "/actions/rules") {
+      setPageTitle("Regras da Plataforma");
+    } else if (path === "/actions/feedbacks") {
+      setPageTitle("Feedbacks");
     } else {
       setPageTitle("Rethink3D");
     }

@@ -1,9 +1,9 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import Loading from "../../components/shared/Loading";
-import RecipientList from "../../components/actions/RecipientList";
-import EmailEditor from "../../components/actions/EmailEditor";
-import { useSendEmail } from "../../hooks/useSendEmail";
+import Loading from "../../../components/shared/Loading";
+import RecipientList from "../../../components/actions/RecipientList";
+import EmailEditor from "../../../components/actions/EmailEditor";
+import { useSendEmail } from "../../../hooks/useSendEmail";
 import "./SendEmail.css";
 
 const SendEmail: React.FC = () => {

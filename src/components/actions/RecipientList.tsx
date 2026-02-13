@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { MakerPreviewDTO } from "../../types/dtos/maker.dto";
 import { Search, CheckSquare, Square, Users } from "lucide-react";
-import "../../pages/Actions/SendEmail.css";
+import "../../pages/Actions/SendEmail/SendEmail.css";
 
 interface RecipientListProps {
   makers: MakerPreviewDTO[];

@@ -5,7 +5,7 @@ import {
   generatePreviewHTML,
 } from "../../constants/email-templates";
 import { EmailTemplateType } from "../../types/enums/email-template.enum";
-import "../../pages/Actions/SendEmail.css";
+import "../../pages/Actions/SendEmail/SendEmail.css";
 
 interface EmailEditorProps {
   subject: string;

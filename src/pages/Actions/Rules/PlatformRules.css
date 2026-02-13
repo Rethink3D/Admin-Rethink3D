@@ -1,0 +1,267 @@
+.rules-page {
+  padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.rules-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.rule-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.rule-card:hover {
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.rule-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.rule-icon {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.rule-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.rule-header p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.rule-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rule-content-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.rule-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-tertiary);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  flex: 1;
+  transition: border-color 0.2s ease;
+}
+
+.rule-input-group:focus-within {
+  border-color: var(--primary);
+}
+
+.rule-input-group span {
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.rule-input-group input {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+}
+
+.rule-content .rule-input-group input {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.save-rule-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.save-rule-btn:hover:not(:disabled) {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.save-rule-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.save-rule-btn.full-width {
+  width: 100%;
+}
+
+.warning-box {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+/* Email List Management */
+.email-add-group {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.add-email-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-email-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--bg-secondary);
+}
+
+.emails-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 50px;
+  padding: 0.75rem;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px dashed var(--border-color);
+}
+
+.email-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.35rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  max-width: 100%;
+}
+
+.email-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.email-chip button {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.email-chip button:hover {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.empty-emails {
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: auto;
+  text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 630px) {
+  .rules-page {
+    padding: 0.75rem;
+  }
+
+  .rule-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .rule-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .email-add-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .add-email-btn {
+    width: 100%;
+    order: 2; /* Keeps input first */
+  }
+
+  .rule-input-group {
+    width: 100%;
+  }
+
+  .email-chip {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .save-rule-btn {
+    width: 100%;
+  }
+
+  .rule-header h3 {
+    font-size: 1rem;
+  }
+}

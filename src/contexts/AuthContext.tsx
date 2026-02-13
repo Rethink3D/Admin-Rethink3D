@@ -35,17 +35,32 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       auth,
       async (currentUser: User | null) => {
         if (currentUser) {
-          const tokenResult = await currentUser.getIdTokenResult();
+          try {
+            let tokenResult = await currentUser.getIdTokenResult();
 
-          if (tokenResult.claims.admin) {
-            setUser(currentUser);
+            if (!tokenResult.claims.admin) {
+              tokenResult = await currentUser.getIdTokenResult(true);
+            }
 
-            const token = await currentUser.getIdToken();
-            api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-          } else {
-            await signOut(auth);
-            setUser(null);
-            alert("Acesso negado: Apenas administradores.");
+            if (tokenResult.claims.admin) {
+              if (user?.uid !== currentUser.uid) {
+                setUser(currentUser);
+              }
+
+              const token = await currentUser.getIdToken();
+
+              if (token === "mock-token") {
+                console.error("CRITICAL: Detectado token mock!");
+              }
+
+              api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            } else {
+              await signOut(auth);
+              setUser(null);
+              alert("Acesso negado: Apenas administradores.");
+            }
+          } catch (error) {
+            console.error("Error in auth state change handler:", error);
           }
         } else {
           setUser(null);
@@ -55,7 +70,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       },
     );
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
