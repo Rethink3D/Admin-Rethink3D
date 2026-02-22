@@ -27,6 +27,10 @@ const SendEmail: React.FC = () => {
   } = useSendEmail();
 
   if (loading) return <Loading />;
+  if (sending)
+    return (
+      <Loading fullScreen message="Enviando e-mails, por favor aguarde..." />
+    );
 
   return (
     <div className="send-email-page">
