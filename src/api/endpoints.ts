@@ -7,6 +7,8 @@ export const API_ENDPOINTS = {
     CATEGORIES: "/admin/categories",
     EMAIL: "/admin/email",
     FEEDBACKS: "/admin/feedbacks",
+    USERS: "/admin/users",
+    PUSH: "/admin/push-notification",
   },
   ANALYTICS: {
     OVERVIEW: "/analytics/overview",

@@ -25,37 +25,56 @@
   margin: var(--spacing-xs) 0 0;
 }
 
-.filters-section {
-  display: flex;
+.products-page .filters-section {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
   gap: var(--spacing-md);
-  align-items: stretch;
   margin-bottom: var(--spacing-xl);
-}
-
-.search-box {
-  flex: 2;
-  display: flex;
-}
-
-.filter-box {
-  flex: 1;
-  min-width: 200px;
-  display: flex;
-}
-
-.search-input,
-.filter-select {
   width: 100%;
-  padding: 8px var(--spacing-md);
+}
+
+.products-page .search-input-wrapper,
+.products-page .filter-box {
+  width: 100%;
+  max-width: none;
+  height: 52px;
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.products-page .search-input {
+  width: 100%;
+  height: 52px;
+  padding: 0 var(--spacing-md) 0 48px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
   transition: all var(--transition-fast);
   background: var(--bg-primary);
   color: var(--text-primary);
-  height: 52px;
   box-sizing: border-box;
-  line-height: 1.5;
+  outline: none;
+  line-height: normal;
+}
+
+.products-page .filter-select {
+  width: 100%;
+  height: 52px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  outline: none;
+  line-height: normal;
+}
+
+.search-input {
+  padding-right: var(--spacing-2xl);
 }
 
 .search-input:focus,
@@ -63,6 +82,44 @@
   outline: none;
   border-color: var(--secondary);
   box-shadow: 0 0 0 3px rgba(192, 192, 192, 0.1);
+}
+
+.products-page .search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: -1px;
+  color: var(--text-secondary);
+  pointer-events: none;
+  display: flex;
+  z-index: 2;
+}
+
+.products-page .clear-search-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: -1px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  z-index: 2;
+  padding: 0;
+}
+
+.products-page .clear-search-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .filter-select {
@@ -185,7 +242,7 @@
     align-items: stretch;
   }
 
-  .search-box,
+  .search-input-wrapper,
   .filter-box {
     width: 100%;
     flex: none;

@@ -33,12 +33,11 @@ const Actions: React.FC = () => {
     {
       id: "notifications",
       title: "Notificações Push",
-      description:
-        "Envie notificações direto para o app móvel dos usuários (Em breve).",
+      description: "Envie notificações direto para o app móvel dos usuários.",
       icon: Bell,
       path: "/actions/push",
       color: "var(--warning)",
-      disabled: true,
+      disabled: false,
     },
     {
       id: "coupons",

@@ -9,6 +9,7 @@ export const useProductsPreview = () => {
   const [products, setProducts] = useState<ProductResponseDTO[]>([]);
   const [makers, setMakers] = useState<MakerPreviewDTO[]>([]);
   const [loading, setLoading] = useState(true);
+  const [localSearch, setLocalSearch] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMaker, setFilterMaker] = useState("");
   const { showModal } = useModal();
@@ -37,6 +38,14 @@ export const useProductsPreview = () => {
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setSearchQuery(localSearch);
+    }, 3000);
+
+    return () => clearTimeout(handler);
+  }, [localSearch]);
 
   const handleDelete = (product: ProductResponseDTO) => {
     showModal({
@@ -80,8 +89,8 @@ export const useProductsPreview = () => {
     products: filteredProducts,
     makers,
     loading,
-    searchQuery,
-    setSearchQuery,
+    searchQuery: localSearch,
+    setSearchQuery: setLocalSearch,
     filterMaker,
     setFilterMaker,
     handleDelete,

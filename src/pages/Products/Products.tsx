@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { Trash2, DollarSign, CheckCircle, XCircle } from "lucide-react";
+import {
+  Trash2,
+  DollarSign,
+  CheckCircle,
+  XCircle,
+  Search,
+  X,
+} from "lucide-react";
 import Loading from "../../components/shared/Loading";
 import { usePageTitle } from "../../contexts/PageTitleContext";
 import { useProductsPreview } from "../../hooks/useProductsPreview";
@@ -30,7 +37,8 @@ const Products: React.FC = () => {
   return (
     <div className="products-page">
       <div className="filters-section">
-        <div className="search-box">
+        <div className="search-input-wrapper">
+          <Search className="search-icon" size={20} />
           <input
             type="text"
             placeholder="Buscar produtos..."
@@ -38,6 +46,14 @@ const Products: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="search-input"
           />
+          {searchQuery && (
+            <button
+              className="clear-search-btn"
+              onClick={() => setSearchQuery("")}
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
         <div className="filter-box">
           <select

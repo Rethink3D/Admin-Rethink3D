@@ -23,6 +23,7 @@ import SendEmail from "./pages/Actions/SendEmail/SendEmail";
 import Feedbacks from "./pages/Actions/Feedbacks/Feedbacks";
 import Categories from "./pages/Actions/Categories/Categories";
 import PlatformRules from "./pages/Actions/Rules/PlatformRules";
+import SendPush from "./pages/Actions/SendPush/SendPush";
 import Loading from "./components/shared/Loading";
 import "./styles/global.css";
 
@@ -86,6 +87,7 @@ const App: React.FC = () => {
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/actions" element={<Actions />} />
                   <Route path="/actions/email" element={<SendEmail />} />
+                  <Route path="/actions/push" element={<SendPush />} />
                   <Route path="/actions/categories" element={<Categories />} />
                   <Route path="/actions/rules" element={<PlatformRules />} />
                   <Route path="/actions/feedbacks" element={<Feedbacks />} />

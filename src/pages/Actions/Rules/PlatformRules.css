@@ -26,11 +26,21 @@
   box-shadow: var(--shadow-sm);
 }
 
+.rule-card--editing {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 99, 102, 241), 0.12);
+}
+
 .rule-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
   margin-bottom: 0.25rem;
+}
+
+.rule-header-text {
+  flex: 1;
+  min-width: 0;
 }
 
 .rule-icon {
@@ -98,6 +108,18 @@
   font-size: 1.1rem;
 }
 
+.rule-input-group--readonly {
+  background: var(--bg-primary);
+  border-color: transparent;
+  cursor: default;
+}
+
+.rule-input-group--readonly input {
+  color: var(--text-secondary);
+  cursor: default;
+  user-select: text;
+}
+
 .save-rule-btn {
   display: flex;
   align-items: center;
@@ -140,7 +162,6 @@
   gap: 0.75rem;
 }
 
-/* Email List Management */
 .email-add-group {
   display: flex;
   gap: 0.75rem;
@@ -222,7 +243,103 @@
   text-align: center;
 }
 
-/* Responsive Adjustments */
+.terms-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.terms-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.terms-edit-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--bg-secondary);
+}
+
+.terms-cancel-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.terms-cancel-btn:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.terms-section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  margin: 0.25rem 0 0;
+}
+
+.terms-divider {
+  border: none;
+  border-top: 1px dashed var(--border-color);
+  margin: 0.5rem 0 0.25rem;
+}
+
+.terms-field-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.terms-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.terms-field--url {
+  flex: 1;
+  min-width: 0;
+}
+
+.terms-field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-left: 0.25rem;
+}
+
 @media (max-width: 630px) {
   .rules-page {
     padding: 0.75rem;
@@ -245,7 +362,7 @@
 
   .add-email-btn {
     width: 100%;
-    order: 2; /* Keeps input first */
+    order: 2;
   }
 
   .rule-input-group {
@@ -263,5 +380,29 @@
 
   .rule-header h3 {
     font-size: 1rem;
+  }
+
+  .terms-field-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .terms-field,
+  .terms-field--url {
+    width: 100%;
+  }
+
+  .rule-header {
+    flex-wrap: wrap;
+  }
+
+  .terms-edit-actions {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .terms-edit-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
