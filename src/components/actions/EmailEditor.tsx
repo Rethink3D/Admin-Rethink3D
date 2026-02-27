@@ -104,7 +104,7 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
           </div>
 
           <div className="form-group">
-            <label htmlFor="type">Tipo de Layout (Cor do Email)</label>
+            <label htmlFor="type">Tipo de Layout (Detalhe Visual)</label>
             <select
               id="type"
               value={templateType}
@@ -113,9 +113,8 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
               }
               className="full-width-input"
             >
-              <option value={EmailTemplateType.INFO}>Informativo (Azul)</option>
-              <option value={EmailTemplateType.WELCOME}>
-                Boas-vindas (Roxo)
+              <option value={EmailTemplateType.INFO}>
+                Padrão (Preto Premium)
               </option>
               <option value={EmailTemplateType.ALERT}>Alerta (Vermelho)</option>
             </select>

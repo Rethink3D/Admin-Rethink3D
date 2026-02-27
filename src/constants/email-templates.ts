@@ -10,12 +10,12 @@ export interface EmailTemplate {
 
 export const EMAIL_TEMPLATES: EmailTemplate[] = [
   {
-    id: "welcome",
-    name: "Boas-vindas (Oficial)",
-    subject: "Bem-vindo à Rethink3D! 🚀",
-    type: EmailTemplateType.WELCOME,
+    id: "info",
+    name: "Comunicado Informativo",
+    subject: "Atualização Importante: Rethink3D",
+    type: EmailTemplateType.INFO,
     content:
-      "Olá Maker,\n\nEstamos muito felizes em ter você conosco! Sua loja já está ativa e pronta para receber pedidos.\n\nAqui estão alguns passos para começar:\n- Complete seu perfil\n- Cadastre seus primeiros produtos\n- Configure suas formas de recebimento\n\nConte conosco para crescer!",
+      "Olá,\n\nGostaríamos de compartilhar uma informação importante sobre suas atividades na plataforma.\n\nCaso tenha dúvidas, nossa equipe está sempre à disposição para ajudar.",
   },
   {
     id: "update",
@@ -40,42 +40,110 @@ export const generatePreviewHTML = (
   bodyContent: string,
   type: EmailTemplateType = EmailTemplateType.INFO,
 ) => {
-  const colors = {
-    [EmailTemplateType.WELCOME]: { header: "#4f46e5", bg: "#eef2ff" },
-    [EmailTemplateType.INFO]: { header: "#2563eb", bg: "#eff6ff" },
-    [EmailTemplateType.ALERT]: { header: "#dc2626", bg: "#fef2f2" },
+  const palettes: Record<
+    EmailTemplateType,
+    { accent: string; btnBg: string; btnColor: string }
+  > = {
+    [EmailTemplateType.WELCOME]: {
+      accent: "#7c3aed",
+      btnBg: "#7c3aed",
+      btnColor: "#ffffff",
+    },
+    [EmailTemplateType.INFO]: {
+      accent: "#000000",
+      btnBg: "#000000",
+      btnColor: "#ffffff",
+    },
+    [EmailTemplateType.ALERT]: {
+      accent: "#dc2626",
+      btnBg: "#dc2626",
+      btnColor: "#ffffff",
+    },
   };
 
-  const theme = colors[type] || colors[EmailTemplateType.INFO];
+  const selectedPalette = palettes[type] || palettes[EmailTemplateType.INFO];
+
+  const theme = {
+    primary: selectedPalette.accent,
+    btnBg: selectedPalette.btnBg,
+    btnColor: selectedPalette.btnColor,
+    bgWhite: "#ffffff",
+    bodyBg: "#f5f5f5",
+    textPrimary: "#171717",
+    textSecondary: "#525252",
+  };
+
   const formattedBody = bodyContent.replace(/\n/g, "<br/>");
 
   return `
     <!DOCTYPE html>
-    <html>
+    <html lang="pt-BR">
     <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
       <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f3f4f6; }
-        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .header { background-color: ${theme.header}; padding: 30px; text-align: center; }
-        .header h1 { color: #ffffff; margin: 0; font-size: 24px; }
-        .content { padding: 40px 30px; color: #374151; line-height: 1.6; font-size: 16px; background-color: ${theme.bg}; }
-        .footer { background-color: #f9fafb; padding: 20px; text-align: center; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb; }
-        .btn { display: inline-block; padding: 12px 24px; background-color: ${theme.header}; color: white; text-decoration: none; border-radius: 6px; margin-top: 20px; font-weight: bold; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; background-color: ${theme.bodyBg}; -webkit-font-smoothing: antialiased; }
+        .wrapper { padding: 40px 20px; background-color: ${theme.bodyBg}; }
+        .container { max-width: 600px; margin: 0 auto; background-color: ${theme.bgWhite}; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); border: 1px solid #e5e5e5; }
+        .header { background-color: #000000; padding: 24px 40px; border-bottom: 4px solid ${theme.primary}; display: flex; justify-content: space-between; align-items: center; }
+        .logo { height: 32px; width: auto; display: block; }
+        .brand-name { color: #ffffff; font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -0.025em; }
+        .content { padding: 48px 40px; color: ${theme.textPrimary}; line-height: 1.7; font-size: 16px; background-color: ${theme.bgWhite}; }
+        .title { margin-top: 0; margin-bottom: 24px; color: #000000; font-size: 24px; font-weight: 600; letter-spacing: -0.025em; }
+        .body-text { color: ${theme.textSecondary}; font-size: 15px; margin-bottom: 32px; }
+        .button-wrapper { text-align: center; margin-top: 32px; }
+        .button { display: inline-block; padding: 14px 32px; background-color: ${theme.btnBg}; color: ${theme.btnColor} !important; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 15px; transition: background-color 0.2s; letter-spacing: 0.01em; }
+        .footer { background-color: #fafafa; padding: 32px 40px; text-align: center; color: #a3a3a3; font-size: 13px; border-top: 1px solid #e5e5e5; }
+        .footer p { margin: 8px 0 0 0; }
+        
+        @media only screen and (max-width: 600px) {
+          .wrapper { padding: 20px 10px; }
+          .container { border-radius: 8px; }
+          .header { padding: 20px; }
+          .brand-name { font-size: 18px; }
+          .content { padding: 32px 20px; }
+          .footer { padding: 24px 20px; }
+        }
       </style>
     </head>
     <body>
-      <div style="padding: 40px 0;">
+      <div class="wrapper">
         <div class="container">
-          <div class="header"><h1>Rethink3D</h1></div>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #000000; border-bottom: 4px solid ${theme.primary}; text-align: center;">
+            <tr>
+              <td style="padding: 16px 40px; text-align: center; vertical-align: middle;">
+                <table align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+                  <tr>
+                    <td style="padding-right: 16px; vertical-align: middle;">
+                      <img class="logo" src="https://web.rethink3d.com.br/Logo.webp" alt="Rethink3D Logo" style="height: 40px; width: auto; display: block;" />
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                      <span class="brand-name" style="color: #ffffff; font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.025em; font-family: 'Inter', system-ui, -apple-system, sans-serif;">Rethink3D</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
           <div class="content">
-            <h2 style="margin-top: 0; color: #111827;">${subject}</h2>
-            <div>${formattedBody}</div>
-            <br/>
-            <center>
-                <a href="https://web.rethink3d.com.br/dashboard" target="_blank" class="btn">Acessar Painel</a>
-            </center>
+            <h2 class="title">${subject}</h2>
+            <div class="body-text">${formattedBody}</div>
+            
+            <div class="button-wrapper">
+              <a href="https://web.rethink3d.com.br/dashboard" 
+                 target="_blank" 
+                 class="button">
+                 Acessar Painel
+              </a>
+            </div>
           </div>
-          <div class="footer"><p>Preview do Sistema</p></div>
+          <div class="footer">
+            <p>Este é um e-mail automático, por favor não responda a esta mensagem.</p>
+            <p>&copy; ${new Date().getFullYear()} Rethink3D. Todos os direitos reservados. (Preview Visual)</p>
+          </div>
         </div>
       </div>
     </body>

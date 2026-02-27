@@ -59,6 +59,7 @@ export const useSendEmail = () => {
 
   const handleSendEmail = async (e: FormEvent) => {
     e.preventDefault();
+    if (sending) return;
 
     if (selectedMakers.length === 0) {
       showModal({
