@@ -34,6 +34,7 @@ export const useSendPush = () => {
           page: pageToLoad,
           limit: 50,
           search: search || undefined,
+          hasDevices: true,
         });
 
         const data = response.data.data || [];

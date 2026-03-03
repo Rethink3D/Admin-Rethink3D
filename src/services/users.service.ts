@@ -15,6 +15,7 @@ export const usersService = {
     page?: number;
     limit?: number;
     search?: string;
+    hasDevices?: boolean;
   }) => {
     return api.get<ResponseDTO<UserResponseDTO>>(API_ENDPOINTS.ADMIN.USERS, {
       params,
