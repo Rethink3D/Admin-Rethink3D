@@ -40,16 +40,6 @@ const Actions: React.FC = () => {
       disabled: false,
     },
     {
-      id: "coupons",
-      title: "Gerar Cupons",
-      description:
-        "Crie campanhas de desconto em massa para produtos específicos (Em breve).",
-      icon: Tag,
-      path: "/actions/coupons",
-      color: "var(--success)",
-      disabled: true,
-    },
-    {
       id: "categories",
       title: "Gerenciar Categorias",
       description:
@@ -77,6 +67,16 @@ const Actions: React.FC = () => {
       icon: MessageSquare,
       path: "/actions/feedbacks",
       color: "var(--primary-dark)",
+      disabled: false,
+    },
+    {
+      id: "devolutions",
+      title: "Gerenciar Devoluções",
+      description:
+        "Analise solicitações de reembolso e tome decisões sobre devoluções de produtos.",
+      icon: Settings,
+      path: "/actions/devolutions",
+      color: "var(--danger)",
       disabled: false,
     },
   ];

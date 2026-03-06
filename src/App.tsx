@@ -24,6 +24,8 @@ import Feedbacks from "./pages/Actions/Feedbacks/Feedbacks";
 import Categories from "./pages/Actions/Categories/Categories";
 import PlatformRules from "./pages/Actions/Rules/PlatformRules";
 import SendPush from "./pages/Actions/SendPush/SendPush";
+import Devolutions from "./pages/Actions/Devolutions/Devolutions";
+import DevolutionAnalysis from "./pages/Actions/Devolutions/DevolutionAnalysis";
 import Loading from "./components/shared/Loading";
 import "./styles/global.css";
 
@@ -91,6 +93,14 @@ const App: React.FC = () => {
                   <Route path="/actions/categories" element={<Categories />} />
                   <Route path="/actions/rules" element={<PlatformRules />} />
                   <Route path="/actions/feedbacks" element={<Feedbacks />} />
+                  <Route
+                    path="/actions/devolutions"
+                    element={<Devolutions />}
+                  />
+                  <Route
+                    path="/actions/devolutions/:id"
+                    element={<DevolutionAnalysis />}
+                  />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace />} />

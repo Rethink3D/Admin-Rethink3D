@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
     FEEDBACKS: "/admin/feedbacks",
     USERS: "/admin/users",
     PUSH: "/admin/push-notification",
+    DEVOLUTIONS: "/devolutions",
   },
   ANALYTICS: {
     OVERVIEW: "/analytics/overview",

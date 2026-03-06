@@ -18,6 +18,7 @@ interface AuthContextData {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
+  token: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -29,6 +30,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
@@ -48,10 +50,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
               }
 
               const token = await currentUser.getIdToken();
-
-              if (token === "mock-token") {
-                console.error("CRITICAL: Detectado token mock!");
-              }
+              setToken(token);
 
               api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             } else {
@@ -64,6 +63,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           }
         } else {
           setUser(null);
+          setToken(null);
           delete api.defaults.headers.common["Authorization"];
         }
         setLoading(false);
@@ -90,6 +90,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         user,
         isAuthenticated: !!user,
         loading,
+        token,
         login,
         logout,
       }}
