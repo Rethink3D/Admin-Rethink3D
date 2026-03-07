@@ -336,41 +336,41 @@ const Dashboard: React.FC = () => {
                   emptyMessage="Nenhum produto visualizado"
                 />
               </div>
-            </div>
-            <div className="analytics-card full-width">
-              <DataTable
-                title={
-                  <h3 className="card-title">
-                    <FileText size={20} />
-                    Top Páginas
-                  </h3>
-                }
-                columns={[
-                  {
-                    key: "pageTitle",
-                    label: "Página",
-                    render: (value) => value,
-                  },
-                  { key: "pagePath", label: "URL" },
-                  {
-                    key: "viewCount",
-                    label: "Visualizações",
-                    render: (value) => value.toLocaleString("pt-BR"),
-                  },
-                  {
-                    key: "uniqueUsers",
-                    label: "Usuários Únicos",
-                    render: (value) => value.toLocaleString("pt-BR"),
-                  },
-                  {
-                    key: "averageTimeOnPage",
-                    label: "Tempo Médio",
-                    render: (value) => analytics.formatDuration(value),
-                  },
-                ]}
-                data={analytics.topPages}
-                emptyMessage="Nenhuma página visualizada"
-              />
+              <div className="analytics-card full-width">
+                <DataTable
+                  title={
+                    <h3 className="card-title">
+                      <FileText size={20} />
+                      Top Páginas
+                    </h3>
+                  }
+                  columns={[
+                    {
+                      key: "pageTitle",
+                      label: "Página",
+                      render: (value) => value,
+                    },
+                    { key: "pagePath", label: "URL" },
+                    {
+                      key: "viewCount",
+                      label: "Visualizações",
+                      render: (value) => value.toLocaleString("pt-BR"),
+                    },
+                    {
+                      key: "uniqueUsers",
+                      label: "Usuários Únicos",
+                      render: (value) => value.toLocaleString("pt-BR"),
+                    },
+                    {
+                      key: "averageTimeOnPage",
+                      label: "Tempo Médio",
+                      render: (value) => analytics.formatDuration(value),
+                    },
+                  ]}
+                  data={analytics.topPages}
+                  emptyMessage="Nenhuma página visualizada"
+                />
+              </div>
             </div>
           </>
         )}

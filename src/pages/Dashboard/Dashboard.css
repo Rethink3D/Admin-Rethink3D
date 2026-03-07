@@ -172,6 +172,8 @@
   height: 540px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  position: relative;
 }
 
 .analytics-card .data-table-wrapper {
@@ -190,6 +192,7 @@
 
 .analytics-card.full-width {
   grid-column: 1 / -1;
+  margin-bottom: var(--spacing-xl);
 }
 
 .analytics-card:hover {

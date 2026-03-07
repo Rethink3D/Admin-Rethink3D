@@ -58,7 +58,7 @@ const ProductDetail: React.FC = () => {
             <div className="header-meta">
               <span className="meta-item">
                 <Tag size={14} />
-                {product.categories.map((c) => c.name).join(", ") ||
+                {product.categories?.map((c) => c.name).join(", ") ||
                   "Sem categoria"}
               </span>
             </div>
@@ -73,9 +73,9 @@ const ProductDetail: React.FC = () => {
                 Galeria e Descrição
               </h2>
               <div className="product-gallery">
-                {product.images.length > 0 ? (
+                {(product.images?.length ?? 0) > 0 ? (
                   <div className="images-grid">
-                    {product.images.map((img) => (
+                    {product.images?.map((img) => (
                       <div key={img.id} className="image-wrapper">
                         <img src={img.url} alt={product.name} />
                       </div>
@@ -104,7 +104,7 @@ const ProductDetail: React.FC = () => {
                   <div className="info-item-stacked">
                     <span className="info-label">Materiais Compatíveis</span>
                     <div className="tags-list">
-                      {product.materials.map((m) => (
+                      {product.materials?.map((m) => (
                         <span key={m} className="tag-pill">
                           {m}
                         </span>
@@ -126,32 +126,40 @@ const ProductDetail: React.FC = () => {
                   Dimensões e Peso
                 </h2>
                 <div className="stack-info">
-                  <div className="dimensions-grid">
-                    <div className="dim-item">
-                      <span className="dim-label">Peso</span>
-                      <span className="dim-value">
-                        {product.productDimensions.weight}g
+                  {product.productDimensions ? (
+                    <div className="dimensions-grid">
+                      <div className="dim-item">
+                        <span className="dim-label">Peso</span>
+                        <span className="dim-value">
+                          {product.productDimensions.weight}g
+                        </span>
+                      </div>
+                      <div className="dim-item">
+                        <span className="dim-label">Alt.</span>
+                        <span className="dim-value">
+                          {product.productDimensions.height}cm
+                        </span>
+                      </div>
+                      <div className="dim-item">
+                        <span className="dim-label">Larg.</span>
+                        <span className="dim-value">
+                          {product.productDimensions.width}cm
+                        </span>
+                      </div>
+                      <div className="dim-item">
+                        <span className="dim-label">Comp.</span>
+                        <span className="dim-value">
+                          {product.productDimensions.length}cm
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="empty-dimensions">
+                      <span className="text-secondary text-sm">
+                        Dimensões não informadas para este produto
                       </span>
                     </div>
-                    <div className="dim-item">
-                      <span className="dim-label">Alt.</span>
-                      <span className="dim-value">
-                        {product.productDimensions.height}cm
-                      </span>
-                    </div>
-                    <div className="dim-item">
-                      <span className="dim-label">Larg.</span>
-                      <span className="dim-value">
-                        {product.productDimensions.width}cm
-                      </span>
-                    </div>
-                    <div className="dim-item">
-                      <span className="dim-label">Comp.</span>
-                      <span className="dim-value">
-                        {product.productDimensions.length}cm
-                      </span>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>

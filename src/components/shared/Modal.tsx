@@ -81,7 +81,7 @@ const Modal: React.FC = () => {
           ) : (
             <button
               className="modal-button modal-button-primary"
-              onClick={hideModal}
+              onClick={handleConfirm}
             >
               OK
             </button>

@@ -108,14 +108,12 @@ export const useDevolutionAnalysis = () => {
             adminObservation,
           });
 
+          await refresh();
+
           showModal({
             type: "success",
             title: "Ação Realizada!",
             message: `A devolução foi marcada como "${label}" com sucesso.`,
-            onConfirm: () => {
-              refresh();
-              navigate("/actions/devolutions");
-            },
           });
         } catch (err) {
           console.error(err);

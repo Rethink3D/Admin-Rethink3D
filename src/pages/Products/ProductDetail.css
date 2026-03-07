@@ -210,6 +210,17 @@
   color: var(--text-secondary);
 }
 
+.empty-dimensions {
+  padding: var(--spacing-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--border-color);
+  text-align: center;
+}
+
 @media (max-width: 1100px) {
   .product-detail-grid {
     grid-template-columns: 1fr;
