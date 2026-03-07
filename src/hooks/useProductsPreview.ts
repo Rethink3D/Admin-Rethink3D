@@ -1,51 +1,46 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { productsService } from "../services/products.service";
-import { makersService } from "../services/makers.service";
 import { ProductResponseDTO } from "../types/dtos/product.dto";
-import { MakerPreviewDTO } from "../types/dtos/maker.dto";
 import { useModal } from "../contexts/ModalContext";
+import { MetaDTO } from "../types/dtos/response.dto";
 
 export const useProductsPreview = () => {
   const [products, setProducts] = useState<ProductResponseDTO[]>([]);
-  const [makers, setMakers] = useState<MakerPreviewDTO[]>([]);
   const [loading, setLoading] = useState(true);
-  const [localSearch, setLocalSearch] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterMaker, setFilterMaker] = useState("");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit] = useState(20);
+  const [meta, setMeta] = useState<MetaDTO | null>(null);
+
   const { showModal } = useModal();
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const [productsResponse, makersResponse] = await Promise.all([
-        productsService.getProducts(),
-        makersService.getMakers(),
-      ]);
+      const response = await productsService.getProducts({
+        page,
+        limit,
+        search: search || undefined,
+      });
 
-      setProducts(productsResponse.data.data);
-      setMakers(makersResponse.data.data);
+      setProducts(response.data.data);
+      if (response.data.meta) {
+        setMeta(response.data.meta);
+      }
     } catch (error) {
       showModal({
         type: "error",
-        title: "Erro ao carregar dados",
+        title: "Erro ao carregar produtos",
         message: error instanceof Error ? error.message : "Erro desconhecido",
       });
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search, limit, showModal]);
 
   useEffect(() => {
     loadData();
-  }, []);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setSearchQuery(localSearch);
-    }, 3000);
-
-    return () => clearTimeout(handler);
-  }, [localSearch]);
+  }, [loadData]);
 
   const handleDelete = (product: ProductResponseDTO) => {
     showModal({
@@ -75,24 +70,14 @@ export const useProductsPreview = () => {
     });
   };
 
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchesSearch =
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.makerName.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesMaker = !filterMaker || product.makerName === filterMaker;
-      return matchesSearch && matchesMaker;
-    });
-  }, [products, searchQuery, filterMaker]);
-
   return {
-    products: filteredProducts,
-    makers,
+    products,
     loading,
-    searchQuery: localSearch,
-    setSearchQuery: setLocalSearch,
-    filterMaker,
-    setFilterMaker,
+    search,
+    setSearch,
+    page,
+    setPage,
+    meta,
     handleDelete,
     refresh: loadData,
   };

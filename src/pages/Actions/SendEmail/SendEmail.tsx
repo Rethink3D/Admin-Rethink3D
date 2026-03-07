@@ -1,5 +1,5 @@
-import React from "react";
-import { ArrowLeft } from "lucide-react";
+import React, { useEffect } from "react";
+import { usePageTitle } from "../../../contexts/PageTitleContext";
 import Loading from "../../../components/shared/Loading";
 import RecipientList from "../../../components/actions/RecipientList";
 import EmailEditor from "../../../components/actions/EmailEditor";
@@ -7,6 +7,7 @@ import { useSendEmail } from "../../../hooks/useSendEmail";
 import "./SendEmail.css";
 
 const SendEmail: React.FC = () => {
+  const { setPageTitle, setBackAction } = usePageTitle();
   const {
     makers,
     loading,
@@ -16,7 +17,6 @@ const SendEmail: React.FC = () => {
     message,
     templateType,
     searchTerm,
-    navigate,
     setSubject,
     setMessage,
     setTemplateType,
@@ -26,6 +26,11 @@ const SendEmail: React.FC = () => {
     handleSendEmail,
   } = useSendEmail();
 
+  useEffect(() => {
+    setPageTitle("Envio de E-mail");
+    setBackAction({ label: "Ações", path: "/actions" });
+  }, [setPageTitle, setBackAction]);
+
   if (loading) return <Loading />;
   if (sending)
     return (
@@ -34,13 +39,6 @@ const SendEmail: React.FC = () => {
 
   return (
     <div className="send-email-page">
-      <div className="page-header-actions">
-        <button className="back-button" onClick={() => navigate("/actions")}>
-          <ArrowLeft size={20} />
-          <span>Voltar para Ações</span>
-        </button>
-      </div>
-
       <div className="action-tool-card">
         <div className="tool-header">
           <h2>Nova Mensagem</h2>

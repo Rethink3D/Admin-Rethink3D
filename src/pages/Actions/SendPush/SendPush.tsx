@@ -1,5 +1,6 @@
-import React from "react";
-import { ArrowLeft, Bell } from "lucide-react";
+import React, { useEffect } from "react";
+import { Bell } from "lucide-react";
+import { usePageTitle } from "../../../contexts/PageTitleContext";
 import Loading from "../../../components/shared/Loading";
 import UserRecipientList from "../../../components/actions/UserRecipientList";
 import PushEditor from "../../../components/actions/PushEditor";
@@ -8,6 +9,7 @@ import { PushTargetEnum } from "../../../services/push.service";
 import "./SendPush.css";
 
 const SendPush: React.FC = () => {
+  const { setPageTitle, setBackAction } = usePageTitle();
   const {
     users,
     loading,
@@ -20,7 +22,6 @@ const SendPush: React.FC = () => {
     page,
     totalPages,
     totalUsers,
-    navigate,
     setTitle,
     setMessage,
     setTarget,
@@ -30,17 +31,15 @@ const SendPush: React.FC = () => {
     handlePageChange,
   } = useSendPush();
 
+  useEffect(() => {
+    setPageTitle("Notificações Push");
+    setBackAction({ label: "Ações", path: "/actions" });
+  }, [setPageTitle, setBackAction]);
+
   if (loading && users.length === 0) return <Loading />;
 
   return (
     <div className="send-push-page">
-      <div className="page-header-actions">
-        <button className="back-button" onClick={() => navigate("/actions")}>
-          <ArrowLeft size={20} />
-          <span>Voltar para Ações</span>
-        </button>
-      </div>
-
       <div className="action-tool-card push-main-card">
         <div className="tool-header">
           <h2>

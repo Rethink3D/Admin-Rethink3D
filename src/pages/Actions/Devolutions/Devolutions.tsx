@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
 import {
-  ArrowLeft,
   Clock,
   ChevronRight,
   AlertCircle,
@@ -29,14 +28,15 @@ const FILTER_OPTIONS = [
 ];
 
 const Devolutions: React.FC = () => {
-  const { setPageTitle } = usePageTitle();
+  const { setPageTitle, setBackAction } = usePageTitle();
   const navigate = useNavigate();
   const { devolutions, loading, error } = useDevolutions();
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
   useEffect(() => {
     setPageTitle("Gerenciar Devoluções");
-  }, [setPageTitle]);
+    setBackAction({ label: "Ações", path: "/actions" });
+  }, [setPageTitle, setBackAction]);
 
   const filteredAndSortedDevolutions = useMemo(() => {
     let result = [...devolutions];
@@ -125,11 +125,6 @@ const Devolutions: React.FC = () => {
       </div>
 
       <div className="dev-toolbar">
-        <button className="dev-back" onClick={() => navigate("/actions")}>
-          <ArrowLeft size={16} />
-          <span>Voltar para Ações</span>
-        </button>
-
         <div className="dev-filters">
           <div className="dev-filters-desktop">
             {FILTER_OPTIONS.map((opt) => (

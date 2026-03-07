@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  ArrowLeft,
   DollarSign,
   Save,
   AlertTriangle,
@@ -13,7 +12,6 @@ import {
   Shield,
   XCircle,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../../contexts/PageTitleContext";
 import { useConstants } from "../../../hooks/useConstants";
 import { useModal } from "../../../contexts/ModalContext";
@@ -40,8 +38,7 @@ const EMPTY_DRAFT: TermsDraft = {
 };
 
 const PlatformRules: React.FC = () => {
-  const { setPageTitle } = usePageTitle();
-  const navigate = useNavigate();
+  const { setPageTitle, setBackAction } = usePageTitle();
   const { getConstants, updateConstant, loading } = useConstants();
   const { showModal } = useModal();
 
@@ -56,8 +53,9 @@ const PlatformRules: React.FC = () => {
 
   useEffect(() => {
     setPageTitle("Regras da Plataforma");
+    setBackAction({ label: "Ações", path: "/actions" });
     fetchData();
-  }, [setPageTitle]);
+  }, [setPageTitle, setBackAction]);
 
   const fetchData = async () => {
     setInitialLoading(true);
@@ -254,7 +252,7 @@ const PlatformRules: React.FC = () => {
       type: "confirm",
       title: "Salvar Lista de Notificação?",
       message:
-        "Os e-mails listados serão notificados sobre novos cadastros de Makers.",
+        "Os e-mails listados receberão notificações por e-mail e push sobre novos pedidos, solicitações, feedbacks, reports e novos Makers.",
       onConfirm: async () => {
         const success = await updateConstant(
           ConstantNameEnum.ADMIN_NOTIFICATION_EMAIL,
@@ -276,11 +274,6 @@ const PlatformRules: React.FC = () => {
 
   return (
     <div className="rules-page animate-fadeIn">
-      <button className="back-btn" onClick={() => navigate("/actions")}>
-        <ArrowLeft size={18} />
-        <span>Voltar para Ações</span>
-      </button>
-
       <div className="rules-container">
         <div className="rule-card">
           <div className="rule-header">
@@ -558,10 +551,11 @@ const PlatformRules: React.FC = () => {
           <div className="rule-header">
             <Mail className="rule-icon" size={24} />
             <div>
-              <h3>Controle de Notificações</h3>
+              <h3>Controle de Notificações de Administrador</h3>
               <p>
-                E-mails que receberão um aviso toda vez que um novo Maker se
-                cadastrar.
+                E-mails que receberão alertas (E-mail e Push) sobre novos
+                eventos na plataforma: Pedidos, Solicitações, Feedbacks, Reports
+                e novos Makers.
               </p>
             </div>
           </div>

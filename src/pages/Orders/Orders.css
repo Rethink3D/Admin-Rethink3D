@@ -25,27 +25,146 @@
   margin: var(--spacing-xs) 0 0;
 }
 
-.filter-box {
-  min-width: 250px;
+.orders-page .filter-area {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-xl);
+  width: 100%;
 }
 
-.filter-select {
+.orders-page .search-input-wrapper,
+.orders-page .filter-box {
   width: 100%;
-  padding: var(--spacing-md);
+  max-width: none;
+  height: 52px;
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.orders-page .search-input {
+  width: 100%;
+  height: 52px;
+  padding: 0 var(--spacing-md) 0 48px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
   transition: all var(--transition-fast);
   background: var(--bg-primary);
-  cursor: pointer;
   color: var(--text-primary);
+  box-sizing: border-box;
+  outline: none;
+  line-height: normal;
 }
 
-.filter-select:focus {
+.orders-page .search-input:focus,
+.orders-page .filter-select:focus {
   outline: none;
   border-color: var(--secondary);
   box-shadow: 0 0 0 3px rgba(192, 192, 192, 0.1);
+}
+
+.orders-page .search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: -1px;
+  color: var(--text-secondary);
+  pointer-events: none;
+  display: flex;
+  z-index: 2;
+}
+
+.orders-page .filter-select {
+  width: 100%;
+  height: 52px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  outline: none;
+  line-height: normal;
+  cursor: pointer;
+}
+
+.orders-page .clear-search-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: -1px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  z-index: 2;
+  padding: 0;
+}
+
+.orders-page .clear-search-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl);
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+}
+
+.pagination-info {
+  margin-right: var(--spacing-lg);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.page-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-button:hover:not(:disabled) {
+  background: var(--bg-secondary);
+  border-color: var(--text-secondary);
+}
+
+.page-button.active {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+.page-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .table-container {
@@ -82,6 +201,37 @@
 
 .data-table tbody tr:hover {
   background: var(--bg-secondary);
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover .action-icon {
+  color: var(--primary);
+  transform: translateX(4px);
+}
+
+.action-icon {
+  transition: all 0.2s ease;
+}
+
+.clickable-card {
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+
+.clickable-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.clickable-card:hover .mobile-card-header svg {
+  color: var(--primary);
 }
 
 .data-table td {
@@ -136,8 +286,13 @@
     align-items: stretch;
   }
 
-  .filter-box {
-    min-width: auto;
+  .orders-page .filter-area {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .orders-page .search-input-wrapper,
+  .orders-page .filter-box {
     width: 100%;
   }
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Plus,
   Search,
@@ -8,7 +7,6 @@ import {
   AlertCircle,
   Loader2,
   X,
-  ArrowLeft,
 } from "lucide-react";
 import Loading from "../../../components/shared/Loading";
 import { usePageTitle } from "../../../contexts/PageTitleContext";
@@ -17,8 +15,7 @@ import { useModal } from "../../../contexts/ModalContext";
 import "./Categories.css";
 
 const Categories: React.FC = () => {
-  const { setPageTitle } = usePageTitle();
-  const navigate = useNavigate();
+  const { setPageTitle, setBackAction } = usePageTitle();
   const {
     categories,
     loading,
@@ -32,10 +29,6 @@ const Categories: React.FC = () => {
 
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
-
-  useEffect(() => {
-    setPageTitle("Categorias");
-  }, [setPageTitle]);
 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,17 +107,17 @@ const Categories: React.FC = () => {
     });
   };
 
+  useEffect(() => {
+    setPageTitle("Categorias");
+    setBackAction({ label: "Ações", path: "/actions" });
+  }, [setPageTitle, setBackAction]);
+
   if (loading && categories.length === 0) {
     return <Loading />;
   }
 
   return (
     <div className="categories-page animate-fadeIn">
-      <button className="back-btn" onClick={() => navigate("/actions")}>
-        <ArrowLeft size={18} />
-        <span>Voltar para Ações</span>
-      </button>
-
       <div className="categories-header-actions">
         <form className="add-category-form" onSubmit={handleAddCategory}>
           <div className="input-group">

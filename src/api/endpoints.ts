@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
     USERS: "/admin/users",
     PUSH: "/admin/push-notification",
     DEVOLUTIONS: "/devolutions",
+    CUSTOM_REQUESTS: "/admin/custom-requests",
   },
   ANALYTICS: {
     OVERVIEW: "/analytics/overview",

@@ -1,19 +1,31 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { makersService } from "../services/makers.service";
 import { MakerPreviewDTO } from "../types/dtos/maker.dto";
 import { useModal } from "../contexts/ModalContext";
+import { MetaDTO } from "../types/dtos/response.dto";
 
 export const useMakersPreview = () => {
   const [makers, setMakers] = useState<MakerPreviewDTO[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit] = useState(20);
+  const [meta, setMeta] = useState<MetaDTO | null>(null);
+
   const { showModal } = useModal();
 
-  const loadMakers = async () => {
+  const loadMakers = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await makersService.getMakers();
+      const response = await makersService.getMakers({
+        page,
+        limit,
+        search: search || undefined,
+      });
       setMakers(response.data.data);
+      if (response.data.meta) {
+        setMeta(response.data.meta);
+      }
     } catch (error) {
       showModal({
         type: "error",
@@ -23,23 +35,20 @@ export const useMakersPreview = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search, limit, showModal]);
 
   useEffect(() => {
     loadMakers();
-  }, []);
-
-  const filteredMakers = useMemo(() => {
-    if (!searchQuery.trim()) return makers;
-    const query = searchQuery.toLowerCase();
-    return makers.filter((maker) => maker.name.toLowerCase().includes(query));
-  }, [makers, searchQuery]);
+  }, [loadMakers]);
 
   return {
-    makers: filteredMakers,
+    makers,
     loading,
-    searchQuery,
-    setSearchQuery,
+    search,
+    setSearch,
+    page,
+    setPage,
+    meta,
     refresh: loadMakers,
   };
 };

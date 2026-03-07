@@ -11,6 +11,7 @@ import {
   LogOut,
   Sun,
   Moon,
+  ClipboardList,
 } from "lucide-react";
 import "./Sidebar.css";
 
@@ -33,6 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { path: "/makers", icon: Users, label: "Makers" },
     { path: "/products", icon: Package, label: "Produtos" },
     { path: "/orders", icon: ShoppingCart, label: "Pedidos" },
+    { path: "/custom-requests", icon: ClipboardList, label: "Solicitações" },
     { path: "/actions", icon: Megaphone, label: "Ações" },
   ];
 

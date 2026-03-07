@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { OrderStatusEnum } from "../../types/enums/order-status.enum";
+import { CustomRequestStatusEnum } from "../../types/enums/custom-request-status.enum";
 import Loading from "../../components/shared/Loading";
 import { usePageTitle } from "../../contexts/PageTitleContext";
-import { useOrders } from "../../hooks/useOrders";
+import { useCustomRequests } from "../../hooks/useCustomRequests";
 import { useToast } from "../../contexts/ToastContext";
 import { formatDateTime } from "../../utils/formatters";
-import { getStatusBadge } from "../../utils/order-utils";
-import {
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  DollarSign,
-  Calendar,
-  X,
-} from "lucide-react";
-import "./Orders.css";
+import { getCustomRequestStatusBadge } from "../../utils/custom-request-utils";
+import { CustomRequestResponseDTO } from "../../types/dtos/custom-request.dto";
+import { Search, ChevronLeft, ChevronRight, Calendar, X } from "lucide-react";
+import "../Orders/Orders.css";
 
-const Orders: React.FC = () => {
+const CustomRequests: React.FC = () => {
   const navigate = useNavigate();
   const { setPageTitle } = usePageTitle();
   const {
-    orders,
+    requests,
     loading,
     filterStatus,
     setFilterStatus,
@@ -29,15 +23,15 @@ const Orders: React.FC = () => {
     page,
     setPage,
     meta,
-  } = useOrders();
+  } = useCustomRequests();
   const { showToast } = useToast();
 
-  const handleOrderClick = (id: string) => {
-    navigate(`/orders/${id}`);
+  const handleRequestClick = (id: string) => {
+    navigate(`/custom-requests/${id}`);
   };
 
   useEffect(() => {
-    setPageTitle("Pedidos");
+    setPageTitle("Solicitações Customizadas");
   }, [setPageTitle]);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -58,13 +52,6 @@ const Orders: React.FC = () => {
           message: `Filtrando por: ${searchTerm}`,
           duration: 3000,
         });
-      } else {
-        showToast({
-          type: "info",
-          title: "Limpando filtros...",
-          message: "Exibindo todos os pedidos",
-          duration: 3000,
-        });
       }
     }, 3000);
 
@@ -77,19 +64,11 @@ const Orders: React.FC = () => {
         setSearch(searchTerm);
         setLastSearched(searchTerm);
         setPage(1);
-
         if (searchTerm) {
           showToast({
             type: "info",
             title: "Buscando...",
             message: `Filtrando por: ${searchTerm}`,
-            duration: 3000,
-          });
-        } else {
-          showToast({
-            type: "info",
-            title: "Limpando filtros...",
-            message: "Exibindo todos os pedidos",
             duration: 3000,
           });
         }
@@ -102,20 +81,14 @@ const Orders: React.FC = () => {
     setLastSearched("");
     setSearch("");
     setPage(1);
-    showToast({
-      type: "info",
-      title: "Busca Limpa",
-      message: "Exibindo todos os pedidos",
-      duration: 3000,
-    });
   };
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilterStatus(e.target.value as OrderStatusEnum | "");
+    setFilterStatus(e.target.value as CustomRequestStatusEnum | "");
     setPage(1);
   };
 
-  if (loading && !orders.length) {
+  if (loading && !requests.length) {
     return <Loading />;
   }
 
@@ -126,7 +99,7 @@ const Orders: React.FC = () => {
           <Search className="search-icon" size={20} />
           <input
             type="text"
-            placeholder="Buscar por ID, Cliente ou Maker..."
+            placeholder="Buscar por Título, ID, Cliente ou Maker..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -146,14 +119,9 @@ const Orders: React.FC = () => {
             className="filter-select"
           >
             <option value="">Todos os status</option>
-            <option value={OrderStatusEnum.AWAITING_PAYMENT}>
-              Aguardando Pagamento
-            </option>
-            <option value={OrderStatusEnum.ON_GOING}>Em Andamento</option>
-            <option value={OrderStatusEnum.READY}>Pronto</option>
-            <option value={OrderStatusEnum.DONE}>Concluído</option>
-            <option value={OrderStatusEnum.DELAYED}>Atrasado</option>
-            <option value={OrderStatusEnum.REFUNDED}>Reembolsado</option>
+            <option value={CustomRequestStatusEnum.OPEN}>Aberta</option>
+            <option value={CustomRequestStatusEnum.ACCEPTED}>Aceita</option>
+            <option value={CustomRequestStatusEnum.CANCELLED}>Cancelada</option>
           </select>
         </div>
       </div>
@@ -162,39 +130,33 @@ const Orders: React.FC = () => {
         <table className="data-table">
           <thead>
             <tr>
+              <th>Título</th>
               <th>Cliente</th>
-              <th>Maker</th>
-              <th>Valor Total</th>
+              <th>Maker Designado</th>
               <th>Status</th>
               <th>Data</th>
               <th style={{ width: "50px" }}></th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {requests.map((request: CustomRequestResponseDTO) => (
               <tr
-                key={order.id}
-                onClick={() => handleOrderClick(order.id)}
+                key={request.id}
+                onClick={() => handleRequestClick(request.id)}
                 className="clickable-row"
               >
-                <td className="font-medium">{order.customerName}</td>
-                <td>{order.makerName}</td>
+                <td className="font-medium">{request.title}</td>
+                <td>{request.user.name}</td>
                 <td>
-                  <div className="flex items-center gap-xs">
-                    <DollarSign size={16} color="var(--success)" />
-                    <span className="font-medium">
-                      {new Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      }).format(order.totalValue)}
-                    </span>
-                  </div>
+                  {request.maker?.name || (
+                    <span className="text-tertiary">Aguardando...</span>
+                  )}
                 </td>
-                <td>{getStatusBadge(order.status)}</td>
+                <td>{getCustomRequestStatusBadge(request.status)}</td>
                 <td>
                   <div className="flex items-center gap-xs text-secondary">
                     <Calendar size={16} />
-                    <span>{formatDateTime(order.createdAt)}</span>
+                    <span>{formatDateTime(request.creationTime)}</span>
                   </div>
                 </td>
                 <td className="text-right">
@@ -209,49 +171,40 @@ const Orders: React.FC = () => {
           </tbody>
         </table>
 
-        {orders.map((order) => (
+        {requests.map((request: CustomRequestResponseDTO) => (
           <div
-            key={order.id}
+            key={request.id}
             className="mobile-card clickable-card"
-            onClick={() => handleOrderClick(order.id)}
+            onClick={() => handleRequestClick(request.id)}
           >
             <div className="mobile-card-header">
-              <h3 className="mobile-card-title">{order.customerName}</h3>
+              <h3 className="mobile-card-title">{request.title}</h3>
               <ChevronRight size={18} color="var(--text-tertiary)" />
             </div>
             <div className="mobile-card-body">
               <div className="mobile-card-row">
-                <span className="mobile-card-label">Maker</span>
-                <span className="mobile-card-value">{order.makerName}</span>
+                <span className="mobile-card-label">Cliente</span>
+                <span className="mobile-card-value">{request.user.name}</span>
               </div>
               <div className="mobile-card-row">
-                <span className="mobile-card-label">Valor Total</span>
-                <span className="mobile-card-value font-medium">
-                  {new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  }).format(order.totalValue)}
+                <span className="mobile-card-label">Maker</span>
+                <span className="mobile-card-value">
+                  {request.maker?.name || "Aguardando..."}
                 </span>
               </div>
               <div className="mobile-card-row">
                 <span className="mobile-card-label">Status</span>
                 <span className="mobile-card-value">
-                  {getStatusBadge(order.status)}
-                </span>
-              </div>
-              <div className="mobile-card-row">
-                <span className="mobile-card-label">Data</span>
-                <span className="mobile-card-value">
-                  {formatDateTime(order.createdAt)}
+                  {getCustomRequestStatusBadge(request.status)}
                 </span>
               </div>
             </div>
           </div>
         ))}
 
-        {orders.length === 0 && (
+        {requests.length === 0 && (
           <div className="empty-state">
-            <p>Nenhum pedido encontrado</p>
+            <p>Nenhuma solicitação encontrada</p>
           </div>
         )}
 
@@ -302,4 +255,4 @@ const Orders: React.FC = () => {
   );
 };
 
-export default Orders;
+export default CustomRequests;

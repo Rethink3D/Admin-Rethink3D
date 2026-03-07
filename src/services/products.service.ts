@@ -1,12 +1,28 @@
 import apiClient from "../api/axios";
 import { API_ENDPOINTS } from "../api/endpoints";
-import { ProductResponseDTO } from "../types/dtos/product.dto";
+import {
+  ProductResponseDTO,
+  ProductDetailDTO,
+} from "../types/dtos/product.dto";
 import { ResponseDTO } from "../types/dtos/response.dto";
 
 export const productsService = {
-  async getProducts() {
+  async getProducts(params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    isActive?: boolean;
+    makerId?: string;
+  }) {
     return apiClient.get<ResponseDTO<ProductResponseDTO>>(
       API_ENDPOINTS.ADMIN.PRODUCTS,
+      { params },
+    );
+  },
+
+  async getProductById(id: string) {
+    return apiClient.get<ProductDetailDTO>(
+      `${API_ENDPOINTS.ADMIN.PRODUCTS}/${id}`,
     );
   },
 

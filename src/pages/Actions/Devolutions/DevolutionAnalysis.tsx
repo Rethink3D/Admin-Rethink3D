@@ -1,6 +1,9 @@
 import { useEffect } from "react";
+import { useAuth } from "../../../contexts/AuthContext";
+import AuthenticatedImage, {
+  getAuthenticatedUrl,
+} from "../../../components/shared/AuthenticatedImage";
 import {
-  ArrowLeft,
   User,
   Package,
   CheckCircle2,
@@ -25,7 +28,8 @@ import {
 import "./DevolutionAnalysis.css";
 
 const DevolutionAnalysis = () => {
-  const { setPageTitle } = usePageTitle();
+  const { token } = useAuth();
+  const { setPageTitle, setBackAction } = usePageTitle();
   const {
     devolution,
     loading,
@@ -39,12 +43,12 @@ const DevolutionAnalysis = () => {
     isAnalysisOpen,
     handleQuantityChange,
     handleAction,
-    navigate,
   } = useDevolutionAnalysis();
 
   useEffect(() => {
     setPageTitle("Análise de Devolução");
-  }, [setPageTitle]);
+    setBackAction({ label: "Solicitações", path: "/actions/devolutions" });
+  }, [setPageTitle, setBackAction]);
 
   if (loading) return <Loading />;
   if (!devolution)
@@ -52,14 +56,6 @@ const DevolutionAnalysis = () => {
 
   return (
     <div className="analysis-page">
-      <button
-        className="back-btn"
-        onClick={() => navigate("/actions/devolutions")}
-      >
-        <ArrowLeft size={18} />
-        <span>Voltar para Lista</span>
-      </button>
-
       <div className="analysis-grid">
         <div className="case-details">
           <section className="case-section">
@@ -169,9 +165,14 @@ const DevolutionAnalysis = () => {
                   <div
                     key={idx}
                     className="evidence-img-wrapper"
-                    onClick={() => window.open(url, "_blank")}
+                    onClick={() =>
+                      window.open(getAuthenticatedUrl(url, token), "_blank")
+                    }
                   >
-                    <img src={url} alt={`Evidência ${idx + 1}`} />
+                    <AuthenticatedImage
+                      src={url}
+                      alt={`Evidência ${idx + 1}`}
+                    />
                     <div className="zoom-overlay">
                       <ExternalLink size={16} />
                     </div>

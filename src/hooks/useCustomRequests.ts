@@ -1,36 +1,41 @@
 import { useState, useEffect, useCallback } from "react";
-import { ordersService } from "../services/orders.service";
-import { OrderResponseDTO, OrderFilterDTO } from "../types/dtos/order.dto";
-import { OrderStatusEnum } from "../types/enums/order-status.enum";
+import { customRequestsService } from "../services/custom-requests.service";
+import {
+  CustomRequestResponseDTO,
+  CustomRequestFilterDTO,
+} from "../types/dtos/custom-request.dto";
+import { CustomRequestStatusEnum } from "../types/enums/custom-request-status.enum";
 import { useModal } from "../contexts/ModalContext";
 import { MetaDTO } from "../types/dtos/response.dto";
 
-export const useOrders = () => {
-  const [orders, setOrders] = useState<OrderResponseDTO[]>([]);
+export const useCustomRequests = () => {
+  const [requests, setRequests] = useState<CustomRequestResponseDTO[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState<OrderStatusEnum | "">("");
+  const [filterStatus, setFilterStatus] = useState<
+    CustomRequestStatusEnum | ""
+  >("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [meta, setMeta] = useState<MetaDTO | null>(null);
   const { showModal } = useModal();
 
-  const loadOrders = useCallback(async () => {
+  const loadRequests = useCallback(async () => {
     try {
       setLoading(true);
-      const filter: OrderFilterDTO = {
+      const filter: CustomRequestFilterDTO = {
         page,
         limit,
         status: filterStatus || undefined,
         search: search || undefined,
       };
-      const response = await ordersService.getOrders(filter);
-      setOrders(response.data);
+      const response = await customRequestsService.getCustomRequests(filter);
+      setRequests(response.data);
       setMeta(response.meta);
     } catch (error) {
       showModal({
         type: "error",
-        title: "Erro ao carregar pedidos",
+        title: "Erro ao carregar solicitações",
         message: error instanceof Error ? error.message : "Erro desconhecido",
       });
     } finally {
@@ -39,11 +44,11 @@ export const useOrders = () => {
   }, [filterStatus, search, page, limit, showModal]);
 
   useEffect(() => {
-    loadOrders();
-  }, [loadOrders]);
+    loadRequests();
+  }, [loadRequests]);
 
   return {
-    orders,
+    requests,
     loading,
     filterStatus,
     setFilterStatus,
@@ -54,6 +59,6 @@ export const useOrders = () => {
     limit,
     setLimit,
     meta,
-    refresh: loadOrders,
+    refresh: loadRequests,
   };
 };

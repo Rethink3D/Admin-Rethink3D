@@ -9,17 +9,19 @@ import {
   Image as ImageIcon,
   ChevronDown,
   ChevronUp,
-  ArrowLeft,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import Loading from "../../../components/shared/Loading";
 import { usePageTitle } from "../../../contexts/PageTitleContext";
 import { useFeedbacks } from "../../../hooks/useFeedbacks";
+import { useAuth } from "../../../contexts/AuthContext";
+import AuthenticatedImage, {
+  getAuthenticatedUrl,
+} from "../../../components/shared/AuthenticatedImage";
 import "./Feedbacks.css";
 
 const Feedbacks: React.FC = () => {
-  const { setPageTitle } = usePageTitle();
-  const navigate = useNavigate();
+  const { token } = useAuth();
+  const { setPageTitle, setBackAction } = usePageTitle();
   const {
     feedbacks,
     loading,
@@ -33,7 +35,8 @@ const Feedbacks: React.FC = () => {
 
   useEffect(() => {
     setPageTitle("Feedbacks");
-  }, [setPageTitle]);
+    setBackAction({ label: "Ações", path: "/actions" });
+  }, [setPageTitle, setBackAction]);
 
   const formatDate = (dateString: string) => {
     return new Intl.DateTimeFormat("pt-BR", {
@@ -55,11 +58,6 @@ const Feedbacks: React.FC = () => {
 
   return (
     <div className="feedbacks-page">
-      <button className="back-btn" onClick={() => navigate("/actions")}>
-        <ArrowLeft size={18} />
-        <span>Voltar para Ações</span>
-      </button>
-
       <div className="filter-box">
         <select
           value={filterSeen === null ? "" : filterSeen.toString()}
@@ -135,10 +133,15 @@ const Feedbacks: React.FC = () => {
                       <div className="feedback-images-grid">
                         {feedback.images.map((img) => (
                           <div key={img.id} className="feedback-image-wrapper">
-                            <img
+                            <AuthenticatedImage
                               src={img.url}
                               alt="Feedback"
-                              onClick={() => window.open(img.url, "_blank")}
+                              onClick={() =>
+                                window.open(
+                                  getAuthenticatedUrl(img.url, token),
+                                  "_blank",
+                                )
+                              }
                             />
                           </div>
                         ))}

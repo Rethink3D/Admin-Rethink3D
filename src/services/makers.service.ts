@@ -8,8 +8,15 @@ import {
 import { ResponseDTO } from "../types/dtos/response.dto";
 
 export const makersService = {
-  getMakers: async () => {
-    return api.get<ResponseDTO<MakerPreviewDTO>>(API_ENDPOINTS.ADMIN.MAKERS);
+  getMakers: async (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+  }) => {
+    return api.get<ResponseDTO<MakerPreviewDTO>>(API_ENDPOINTS.ADMIN.MAKERS, {
+      params,
+    });
   },
 
   getMakerById: async (id: string) => {
