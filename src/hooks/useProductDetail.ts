@@ -6,6 +6,8 @@ import { useModal } from "../contexts/ModalContext";
 export const useProductDetail = (id: string | undefined) => {
   const [product, setProduct] = useState<ProductDetailDTO | null>(null);
   const [loading, setLoading] = useState(true);
+  const [toggling, setToggling] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const { showModal } = useModal();
 
   const loadProduct = useCallback(async () => {
@@ -25,9 +27,52 @@ export const useProductDetail = (id: string | undefined) => {
     }
   }, [id, showModal]);
 
+  const toggleActive = useCallback(async () => {
+    if (!id) return;
+    try {
+      setToggling(true);
+      await productsService.toggleProductActive(id);
+      await loadProduct();
+    } catch (error) {
+      showModal({
+        type: "error",
+        title: "Erro ao alterar status",
+        message: error instanceof Error ? error.message : "Erro desconhecido",
+      });
+    } finally {
+      setToggling(false);
+    }
+  }, [id, loadProduct, showModal]);
+
+  const deleteProduct = useCallback(async (): Promise<boolean> => {
+    if (!id) return false;
+    try {
+      setDeleting(true);
+      await productsService.deleteProduct(id);
+      return true;
+    } catch (error) {
+      showModal({
+        type: "error",
+        title: "Erro ao excluir produto",
+        message: error instanceof Error ? error.message : "Erro desconhecido",
+      });
+      return false;
+    } finally {
+      setDeleting(false);
+    }
+  }, [id, showModal]);
+
   useEffect(() => {
     loadProduct();
   }, [loadProduct]);
 
-  return { product, loading, refresh: loadProduct };
+  return {
+    product,
+    loading,
+    toggling,
+    deleting,
+    refresh: loadProduct,
+    toggleActive,
+    deleteProduct,
+  };
 };

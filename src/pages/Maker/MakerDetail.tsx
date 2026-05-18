@@ -70,6 +70,14 @@ const MakerDetail: React.FC = () => {
     );
   }, [maker, formData.status]);
 
+  const willResolveAllReports = useMemo(() => {
+    if (!maker) return false;
+    return (
+      maker.status === MakerStatusEnum.BLOCKED &&
+      formData.status === MakerStatusEnum.ACTIVE
+    );
+  }, [maker, formData.status]);
+
   const handleBack = useCallback(() => {
     if (hasChanges) {
       showModal({
@@ -243,6 +251,15 @@ const MakerDetail: React.FC = () => {
                     <span>
                       <strong>E-mail Automático:</strong> Salvar como Ativo
                       enviará boas-vindas.
+                    </span>
+                  </div>
+                )}
+
+                {willResolveAllReports && (
+                  <div className="resolve-reports-notice">
+                    <Info size={18} />
+                    <span>
+                      <strong>Aviso de Denúncias:</strong> Ao alterar de Bloqueado para Ativo, todas as denúncias abertas contra este Maker serão automaticamente marcadas como resolvidas (zerando a contagem de denúncias ativas).
                     </span>
                   </div>
                 )}
