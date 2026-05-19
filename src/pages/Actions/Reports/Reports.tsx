@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Clock,
@@ -26,6 +26,8 @@ import { useModal } from "../../../contexts/ModalContext";
 import { productsService } from "../../../services/products.service";
 import { makersService } from "../../../services/makers.service";
 import { MakerStatusEnum } from "../../../types/enums/maker-status.enum";
+import { useAuth } from "../../../contexts/AuthContext";
+import { getAuthenticatedUrl } from "../../../components/shared/AuthenticatedImage";
 import "./Reports.css";
 
 const reasonTranslations: Record<string, string> = {
@@ -43,7 +45,7 @@ const reasonTranslations: Record<string, string> = {
   OTHER: "Outro",
 };
 
-const renderMessageContent = (msg: any) => {
+const renderMessageContent = (msg: any, token: string | null) => {
   switch (msg.type) {
     case "image":
       return (
@@ -51,11 +53,95 @@ const renderMessageContent = (msg: any) => {
           📸 <em>[Imagem / Anexo enviado]</em>
           {msg.text && (
             <p className="bubble-text" style={{ marginTop: "4px" }}>
-              {msg.text}
+              <a
+                href={getAuthenticatedUrl(msg.text, token)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#2563EB", textDecoration: "underline" }}
+              >
+                Ver Imagem Completa
+              </a>
             </p>
           )}
         </span>
       );
+    case "audio":
+      return (
+        <span className="msg-attachment-preview">
+          🎤 <em>[Áudio enviado]</em>
+          {msg.text && (
+            <p className="bubble-text" style={{ marginTop: "4px" }}>
+              <a
+                href={getAuthenticatedUrl(msg.text, token)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#2563EB", textDecoration: "underline" }}
+              >
+                Ouvir Áudio
+              </a>
+            </p>
+          )}
+        </span>
+      );
+    case "video": {
+      let videoUrl = "";
+      try {
+        const data = JSON.parse(msg.text);
+        videoUrl = data.videoUrl || "";
+      } catch {
+        videoUrl = msg.text;
+      }
+      return (
+        <span className="msg-attachment-preview">
+          🎥 <em>[Vídeo enviado]</em>
+          {videoUrl && (
+            <p className="bubble-text" style={{ marginTop: "4px" }}>
+              <a
+                href={getAuthenticatedUrl(videoUrl, token)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#2563EB", textDecoration: "underline" }}
+              >
+                Assistir Vídeo
+              </a>
+            </p>
+          )}
+        </span>
+      );
+    }
+    case "location": {
+      let address = "Localização selecionada";
+      let mapUrl = "";
+      try {
+        const data = JSON.parse(msg.text);
+        address = data.address || "Localização selecionada";
+        if (data.latitude && data.longitude) {
+          mapUrl = `https://www.google.com/maps/search/?api=1&query=${data.latitude},${data.longitude}`;
+        }
+      } catch {
+        address = msg.text;
+      }
+      return (
+        <span className="msg-location-preview">
+          📍 <strong>[Localização Compartilhada]</strong>
+          <p className="bubble-text" style={{ marginTop: "4px" }}>
+            {address}
+          </p>
+          {mapUrl && (
+            <p className="bubble-text" style={{ marginTop: "4px" }}>
+              <a
+                href={mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#2563EB", textDecoration: "underline" }}
+              >
+                Ver no Google Maps
+              </a>
+            </p>
+          )}
+        </span>
+      );
+    }
     case "quotation":
       return (
         <span className="msg-quotation-preview">
@@ -73,6 +159,7 @@ const renderMessageContent = (msg: any) => {
 };
 
 const Reports: React.FC = () => {
+  const { token } = useAuth();
   const { setPageTitle, setBackAction } = usePageTitle();
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -233,7 +320,11 @@ const Reports: React.FC = () => {
     });
   };
 
-  const handleBlockMaker = (makerId: string, makerName: string, reportId: string) => {
+  const handleBlockMaker = (
+    makerId: string,
+    makerName: string,
+    reportId: string,
+  ) => {
     showModal({
       type: "confirm",
       title: "Bloquear Maker / Loja",
@@ -279,7 +370,8 @@ const Reports: React.FC = () => {
           showToast({
             type: "success",
             title: "Conversa Encerrada",
-            message: "A conversa foi encerrada e a denúncia marcada como resolvida com sucesso.",
+            message:
+              "A conversa foi encerrada e a denúncia marcada como resolvida com sucesso.",
           });
           hideModal();
           refresh();
@@ -306,7 +398,11 @@ const Reports: React.FC = () => {
         <button
           className="accordion-header"
           onClick={() => setShowRules(!showRules)}
-          title={showRules ? "Ocultar Diretrizes de Moderação" : "Visualizar Diretrizes de Moderação"}
+          title={
+            showRules
+              ? "Ocultar Diretrizes de Moderação"
+              : "Visualizar Diretrizes de Moderação"
+          }
         >
           <div className="header-title">
             <AlertTriangle className="banner-icon" size={18} />
@@ -321,16 +417,33 @@ const Reports: React.FC = () => {
           <div className="accordion-content">
             <ul>
               <li>
-                <strong>Bloqueio Automático (Auto-Block):</strong> Se um Maker acumular <strong>5 denúncias ativas (não resolvidas)</strong>, o sistema suspende sua loja automaticamente e oculta seus produtos.
+                <strong>Bloqueio Automático (Auto-Block):</strong> Se um Maker
+                acumular <strong>5 denúncias ativas (não resolvidas)</strong>, o
+                sistema suspende sua loja automaticamente e oculta seus
+                produtos.
               </li>
               <li>
-                <strong>Prevenção contra Spam / Boicote:</strong> Cada cliente pode manter apenas <strong>uma única denúncia ativa por vez</strong> direcionada ao mesmo Maker, protegendo contra ataques coordenados de reports.
+                <strong>Prevenção contra Spam / Boicote:</strong> Cada cliente
+                pode manter apenas{" "}
+                <strong>uma única denúncia ativa por vez</strong> direcionada ao
+                mesmo Maker, protegendo contra ataques coordenados de reports.
               </li>
               <li>
                 <strong>Fluxo de Moderação & Reativação:</strong>
                 <ul>
-                  <li>Ao bloquear um Maker através de uma denúncia ativa, ela é resolvida automaticamente no mesmo instante.</li>
-                  <li>Ao reativar um Maker bloqueado (alterando de "Bloqueado" para "Ativo"), <strong>todas as denúncias ativas contra ele são marcadas como resolvidas</strong>, limpando o histórico dele.</li>
+                  <li>
+                    Ao bloquear um Maker através de uma denúncia ativa, ela é
+                    resolvida automaticamente no mesmo instante.
+                  </li>
+                  <li>
+                    Ao reativar um Maker bloqueado (alterando de "Bloqueado"
+                    para "Ativo"),{" "}
+                    <strong>
+                      todas as denúncias ativas contra ele são marcadas como
+                      resolvidas
+                    </strong>
+                    , limpando o histórico dele.
+                  </li>
                 </ul>
               </li>
             </ul>
@@ -425,11 +538,12 @@ const Reports: React.FC = () => {
                           {isProductReport
                             ? report.productName
                             : isChatReport
-                            ? `Conversa (ID: ${report.chatId})`
-                            : report.makerName}
+                              ? `Conversa (ID: ${report.chatId})`
+                              : report.makerName}
                         </h4>
                         <span className="reporter-span">
-                          <User size={12} /> Feito por: {report.userName || "Usuário"}
+                          <User size={12} /> Feito por:{" "}
+                          {report.userName || "Usuário"}
                         </span>
                       </div>
                     </div>
@@ -469,10 +583,12 @@ const Reports: React.FC = () => {
                             <strong>Denunciante:</strong> {report.userName}
                           </p>
                           <p>
-                            <strong>E-mail:</strong> {report.userEmail ?? "Não informado"}
+                            <strong>E-mail:</strong>{" "}
+                            {report.userEmail ?? "Não informado"}
                           </p>
                           <p>
-                            <strong>Telefone:</strong> {report.userPhone ?? "Não informado"}
+                            <strong>Telefone:</strong>{" "}
+                            {report.userPhone ?? "Não informado"}
                           </p>
                           <p>
                             <strong>Loja do Maker:</strong> {report.makerName}
@@ -496,13 +612,17 @@ const Reports: React.FC = () => {
                               <AlertTriangle size={16} className="alert-icon" />
                               <p>
                                 <strong>Descrição do Usuário:</strong>{" "}
-                                {report.other || "Sem descrição adicional fornecida."}
+                                {report.other ||
+                                  "Sem descrição adicional fornecida."}
                               </p>
                             </div>
                           ) : (
                             <p>
                               Esta denúncia foi categorizada sob o motivo{" "}
-                              <strong>"{reasonTranslations[report.reason]}"</strong>.
+                              <strong>
+                                "{reasonTranslations[report.reason]}"
+                              </strong>
+                              .
                             </p>
                           )}
                         </div>
@@ -524,12 +644,18 @@ const Reports: React.FC = () => {
                                   >
                                     <div
                                       className={`chat-bubble ${
-                                        isClient ? "client-bubble" : "maker-bubble"
+                                        isClient
+                                          ? "client-bubble"
+                                          : "maker-bubble"
                                       }`}
                                     >
                                       <div className="bubble-header">
                                         <span className="bubble-sender">
-                                          {isClient ? "Cliente" : "Maker"} ({isClient ? report.userName : report.makerName})
+                                          {isClient ? "Cliente" : "Maker"} (
+                                          {isClient
+                                            ? report.userName
+                                            : report.makerName}
+                                          )
                                         </span>
                                         {msg.time && (
                                           <span className="bubble-time">
@@ -537,7 +663,7 @@ const Reports: React.FC = () => {
                                           </span>
                                         )}
                                       </div>
-                                      {renderMessageContent(msg)}
+                                      {renderMessageContent(msg, token)}
                                     </div>
                                   </div>
                                 );
@@ -556,14 +682,18 @@ const Reports: React.FC = () => {
                           {isProductReport && report.productId && (
                             <button
                               className="nav-btn"
-                              onClick={() => navigate(`/products/${report.productId}`)}
+                              onClick={() =>
+                                navigate(`/products/${report.productId}`)
+                              }
                             >
                               <ExternalLink size={16} /> Ver Produto
                             </button>
                           )}
                           <button
                             className="nav-btn"
-                            onClick={() => navigate(`/makers/${report.makerId}`)}
+                            onClick={() =>
+                              navigate(`/makers/${report.makerId}`)
+                            }
                           >
                             <ExternalLink size={16} /> Ver Perfil da Loja
                           </button>
@@ -578,7 +708,7 @@ const Reports: React.FC = () => {
                                   onClick={() =>
                                     handleDeleteProduct(
                                       report.productId!,
-                                      report.productName || "Produto"
+                                      report.productName || "Produto",
                                     )
                                   }
                                 >
@@ -590,10 +720,7 @@ const Reports: React.FC = () => {
                                 <button
                                   className="action-btn danger-btn"
                                   onClick={() =>
-                                    handleCloseChat(
-                                      report.id,
-                                      report.chatId!
-                                    )
+                                    handleCloseChat(report.id, report.chatId!)
                                   }
                                 >
                                   <MessageSquare size={16} /> Encerrar Conversa
@@ -603,7 +730,11 @@ const Reports: React.FC = () => {
                               <button
                                 className="action-btn warning-btn"
                                 onClick={() =>
-                                  handleBlockMaker(report.makerId, report.makerName, report.id)
+                                  handleBlockMaker(
+                                    report.makerId,
+                                    report.makerName,
+                                    report.id,
+                                  )
                                 }
                               >
                                 <Ban size={16} /> Bloquear Maker
