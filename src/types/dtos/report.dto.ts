@@ -11,6 +11,8 @@ export interface ReportResponseDTO {
   id: string;
   userId: string;
   userName: string;
+  userEmail: string | null;
+  userPhone: string | null;
   makerId: string;
   makerName: string;
   productId: string | null;

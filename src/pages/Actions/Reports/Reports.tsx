@@ -469,6 +469,12 @@ const Reports: React.FC = () => {
                             <strong>Denunciante:</strong> {report.userName}
                           </p>
                           <p>
+                            <strong>E-mail:</strong> {report.userEmail ?? "Não informado"}
+                          </p>
+                          <p>
+                            <strong>Telefone:</strong> {report.userPhone ?? "Não informado"}
+                          </p>
+                          <p>
                             <strong>Loja do Maker:</strong> {report.makerName}
                           </p>
                           {isProductReport && (
