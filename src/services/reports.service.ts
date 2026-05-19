@@ -17,4 +17,8 @@ export const reportsService = {
   unresolveReport: async (id: string) => {
     return api.patch(`${API_ENDPOINTS.ADMIN.REPORTS}/${id}/unresolve`);
   },
+
+  closeChatReport: async (id: string) => {
+    return api.patch(`${API_ENDPOINTS.ADMIN.REPORTS}/${id}/close-chat`);
+  },
 };

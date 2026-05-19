@@ -16,6 +16,7 @@ import {
   Ban,
   Unlock,
   X,
+  MessageSquare,
 } from "lucide-react";
 import Loading from "../../../components/shared/Loading";
 import { usePageTitle } from "../../../contexts/PageTitleContext";
@@ -42,6 +43,35 @@ const reasonTranslations: Record<string, string> = {
   OTHER: "Outro",
 };
 
+const renderMessageContent = (msg: any) => {
+  switch (msg.type) {
+    case "image":
+      return (
+        <span className="msg-attachment-preview">
+          📸 <em>[Imagem / Anexo enviado]</em>
+          {msg.text && (
+            <p className="bubble-text" style={{ marginTop: "4px" }}>
+              {msg.text}
+            </p>
+          )}
+        </span>
+      );
+    case "quotation":
+      return (
+        <span className="msg-quotation-preview">
+          📋 <strong>[Novo Orçamento Enviado]</strong>
+          {msg.text && (
+            <p className="bubble-text" style={{ marginTop: "4px" }}>
+              {msg.text}
+            </p>
+          )}
+        </span>
+      );
+    default:
+      return <p className="bubble-text">{msg.text}</p>;
+  }
+};
+
 const Reports: React.FC = () => {
   const { setPageTitle, setBackAction } = usePageTitle();
   const navigate = useNavigate();
@@ -60,6 +90,7 @@ const Reports: React.FC = () => {
     setFilterResolved,
     resolveReport,
     unresolveReport,
+    closeChatReport,
     refresh,
   } = useReports();
 
@@ -235,6 +266,36 @@ const Reports: React.FC = () => {
     });
   };
 
+  const handleCloseChat = (reportId: string, chatId: string) => {
+    showModal({
+      type: "confirm",
+      title: "Encerrar Conversa Denunciada",
+      message: `Tem certeza de que deseja encerrar permanentemente a conversa/chat (ID: ${chatId})? Ambas as partes não poderão enviar mais mensagens e esta denúncia será marcada como resolvida.`,
+      confirmText: "Sim, Encerrar",
+      cancelText: "Não, Cancelar",
+      onConfirm: async () => {
+        try {
+          await closeChatReport(reportId);
+          showToast({
+            type: "success",
+            title: "Conversa Encerrada",
+            message: "A conversa foi encerrada e a denúncia marcada como resolvida com sucesso.",
+          });
+          hideModal();
+          refresh();
+        } catch (err) {
+          showToast({
+            type: "error",
+            title: "Erro ao Encerrar",
+            message: "Não foi possível encerrar a conversa.",
+          });
+          hideModal();
+        }
+      },
+      onCancel: hideModal,
+    });
+  };
+
   if (loading && reports.length === 0) {
     return <Loading />;
   }
@@ -329,6 +390,7 @@ const Reports: React.FC = () => {
           <div className="reports-list">
             {reports.map((report) => {
               const isProductReport = !!report.productId;
+              const isChatReport = !!report.chatId;
 
               return (
                 <div
@@ -345,6 +407,11 @@ const Reports: React.FC = () => {
                           <Box size={16} />
                           <span>Produto</span>
                         </div>
+                      ) : isChatReport ? (
+                        <div className="item-badge chat-type">
+                          <MessageSquare size={16} />
+                          <span>Chat / Conversa</span>
+                        </div>
                       ) : (
                         <div className="item-badge maker-type">
                           <Store size={16} />
@@ -353,7 +420,14 @@ const Reports: React.FC = () => {
                       )}
 
                       <div className="user-info">
-                        <h4>Denunciado: {isProductReport ? report.productName : report.makerName}</h4>
+                        <h4>
+                          Denunciado:{" "}
+                          {isProductReport
+                            ? report.productName
+                            : isChatReport
+                            ? `Conversa (ID: ${report.chatId})`
+                            : report.makerName}
+                        </h4>
                         <span className="reporter-span">
                           <User size={12} /> Feito por: {report.userName || "Usuário"}
                         </span>
@@ -402,6 +476,11 @@ const Reports: React.FC = () => {
                               <strong>Produto:</strong> {report.productName}
                             </p>
                           )}
+                          {isChatReport && (
+                            <p>
+                              <strong>Chat ID:</strong> {report.chatId}
+                            </p>
+                          )}
                         </div>
 
                         <div className="details-column">
@@ -422,6 +501,49 @@ const Reports: React.FC = () => {
                           )}
                         </div>
                       </div>
+
+                      {isChatReport && report.chatMessages && (
+                        <div className="chat-transcript-section">
+                          <h5>Histórico da Conversa (Últimas Mensagens)</h5>
+                          <div className="chat-messages-container">
+                            {report.chatMessages.length > 0 ? (
+                              report.chatMessages.map((msg) => {
+                                const isClient = msg.senderRole === "CLIENT";
+                                return (
+                                  <div
+                                    key={msg.id}
+                                    className={`chat-bubble-row ${
+                                      isClient ? "client-row" : "maker-row"
+                                    }`}
+                                  >
+                                    <div
+                                      className={`chat-bubble ${
+                                        isClient ? "client-bubble" : "maker-bubble"
+                                      }`}
+                                    >
+                                      <div className="bubble-header">
+                                        <span className="bubble-sender">
+                                          {isClient ? "Cliente" : "Maker"} ({isClient ? report.userName : report.makerName})
+                                        </span>
+                                        {msg.time && (
+                                          <span className="bubble-time">
+                                            {formatDate(msg.time)}
+                                          </span>
+                                        )}
+                                      </div>
+                                      {renderMessageContent(msg)}
+                                    </div>
+                                  </div>
+                                );
+                              })
+                            ) : (
+                              <p className="no-messages-text">
+                                Nenhuma mensagem encontrada nesta conversa.
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
 
                       <div className="report-actions-bar">
                         <div className="nav-actions">
@@ -455,6 +577,20 @@ const Reports: React.FC = () => {
                                   }
                                 >
                                   <Trash2 size={16} /> Excluir Produto
+                                </button>
+                              )}
+
+                              {isChatReport && report.chatId && (
+                                <button
+                                  className="action-btn danger-btn"
+                                  onClick={() =>
+                                    handleCloseChat(
+                                      report.id,
+                                      report.chatId!
+                                    )
+                                  }
+                                >
+                                  <MessageSquare size={16} /> Encerrar Conversa
                                 </button>
                               )}
 

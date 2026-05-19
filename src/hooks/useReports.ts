@@ -61,6 +61,17 @@ export const useReports = () => {
     }
   };
 
+  const closeChatReport = async (id: string) => {
+    try {
+      await reportsService.closeChatReport(id);
+      setReports((prev) =>
+        prev.map((r) => (r.id === id ? { ...r, resolved: true } : r))
+      );
+    } catch (err) {
+      console.error("Erro ao encerrar chat da denúncia", err);
+    }
+  };
+
   const filteredReports = reports.filter((r) => {
     if (filterResolved === null) return true;
     return r.resolved === filterResolved;
@@ -81,6 +92,7 @@ export const useReports = () => {
     setFilterResolved,
     resolveReport,
     unresolveReport,
+    closeChatReport,
     refresh: fetchReports,
   };
 };

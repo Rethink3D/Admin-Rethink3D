@@ -175,6 +175,11 @@
   color: #f59e0b;
 }
 
+.item-badge.chat-type {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
 .user-info h4 {
   margin: 0 0 4px 0;
   font-size: 1.05rem;
@@ -655,5 +660,121 @@
   margin-top: var(--spacing-xs);
   list-style-type: circle;
 }
+
+.chat-transcript-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+.chat-transcript-section h5 {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-messages-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 380px;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.chat-bubble-row {
+  display: flex;
+  width: 100%;
+}
+
+.chat-bubble-row.client-row {
+  justify-content: flex-start;
+}
+
+.chat-bubble-row.maker-row {
+  justify-content: flex-end;
+}
+
+.chat-bubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.chat-bubble.client-bubble {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-top-left-radius: 2px;
+}
+
+.chat-bubble.maker-bubble {
+  background: var(--primary);
+  color: #ffffff;
+  border-top-right-radius: 2px;
+}
+
+.bubble-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  font-weight: 550;
+  opacity: 0.85;
+}
+
+.chat-bubble.client-bubble .bubble-sender {
+  color: var(--primary);
+}
+
+.chat-bubble.maker-bubble .bubble-sender {
+  color: #ffffff;
+}
+
+.bubble-time {
+  font-size: 0.7rem;
+  opacity: 0.75;
+}
+
+.bubble-text {
+  margin: 0;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.no-messages-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin: 1.5rem 0;
+}
+
+.msg-attachment-preview,
+.msg-quotation-preview {
+  font-size: 0.85rem;
+  display: block;
+}
+
+.msg-attachment-preview em {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.msg-quotation-preview strong {
+  font-weight: 600;
+}
+
 
 
