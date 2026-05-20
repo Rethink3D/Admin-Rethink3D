@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Package,
   DollarSign,
@@ -11,18 +11,28 @@ import {
   Tag,
   Check,
   Copy,
+  Shield,
+  Play,
+  Pause,
+  Trash2,
 } from "lucide-react";
 import { usePageTitle } from "../../contexts/PageTitleContext";
 import { useProductDetail } from "../../hooks/useProductDetail";
 import Loading from "../../components/shared/Loading";
 import { formatCurrency } from "../../utils/formatters";
+import { useModal } from "../../contexts/ModalContext";
+import { useToast } from "../../contexts/ToastContext";
 import "./ProductDetail.css";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { setPageTitle, setBackAction } = usePageTitle();
-  const { product, loading } = useProductDetail(id);
-  const [copied, setCopied] = React.useState(false);
+  const { product, loading, toggling, deleting, toggleActive, deleteProduct } =
+    useProductDetail(id);
+  const [copied, setCopied] = useState(false);
+  const { showModal } = useModal();
+  const { showToast } = useToast();
 
   useEffect(() => {
     setPageTitle("Detalhes do Produto");
@@ -36,6 +46,36 @@ const ProductDetail: React.FC = () => {
     navigator.clipboard.writeText(id);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleToggleActive = async () => {
+    await toggleActive();
+    showToast({
+      type: "success",
+      title: "Status atualizado",
+      message: "O status de ativação do produto foi alterado com sucesso.",
+    });
+  };
+
+  const handleDelete = () => {
+    showModal({
+      type: "confirm",
+      title: "Excluir Produto",
+      message: `Tem certeza que deseja excluir permanentemente o produto "${product?.name}"? Esta ação não poderá ser desfeita.`,
+      confirmText: "Sim, Excluir",
+      cancelText: "Cancelar",
+      onConfirm: async () => {
+        const success = await deleteProduct();
+        if (success) {
+          showToast({
+            type: "success",
+            title: "Produto excluído",
+            message: "O produto foi excluído com sucesso do sistema.",
+          });
+          navigate("/products");
+        }
+      },
+    });
   };
 
   if (loading) return <Loading />;
@@ -166,6 +206,38 @@ const ProductDetail: React.FC = () => {
           </div>
 
           <div className="detail-side-col">
+            <div className="info-card admin-actions-card">
+              <h2 className="card-title admin-title">
+                <Shield size={18} />
+                Ações Administrativas
+              </h2>
+              <div className="admin-buttons-stack">
+                <button
+                  className={`admin-btn ${product.isActive ? "btn-pause" : "btn-activate"}`}
+                  onClick={handleToggleActive}
+                  disabled={toggling || deleting}
+                >
+                  {product.isActive ? <Pause size={16} /> : <Play size={16} />}
+                  <span>
+                    {toggling
+                      ? "Processando..."
+                      : product.isActive
+                        ? "Pausar Produto"
+                        : "Ativar Produto"}
+                  </span>
+                </button>
+
+                <button
+                  className="admin-btn btn-delete"
+                  onClick={handleDelete}
+                  disabled={toggling || deleting}
+                >
+                  <Trash2 size={16} />
+                  <span>{deleting ? "Excluindo..." : "Excluir Produto"}</span>
+                </button>
+              </div>
+            </div>
+
             <div className="info-card primary-border">
               <h2 className="card-title">
                 <DollarSign size={18} />

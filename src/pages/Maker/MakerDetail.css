@@ -392,6 +392,23 @@
   color: var(--info);
 }
 
+.resolve-reports-notice {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius-md);
+  color: var(--warning);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
+.resolve-reports-notice svg {
+  flex-shrink: 0;
+  color: var(--warning);
+}
+
 @media (max-width: 1024px) {
   .maker-detail-grid {
     grid-template-columns: 1fr;

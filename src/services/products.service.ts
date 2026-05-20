@@ -29,4 +29,8 @@ export const productsService = {
   async deleteProduct(id: string): Promise<void> {
     await apiClient.delete(`${API_ENDPOINTS.ADMIN.PRODUCTS}/${id}`);
   },
+
+  async toggleProductActive(id: string): Promise<void> {
+    await apiClient.patch(`${API_ENDPOINTS.ADMIN.PRODUCTS}/${id}/toggle-active`);
+  },
 };

@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     PUSH: "/admin/push-notification",
     DEVOLUTIONS: "/devolutions",
     CUSTOM_REQUESTS: "/admin/custom-requests",
+    REPORTS: "/admin/reports",
   },
   ANALYTICS: {
     OVERVIEW: "/analytics/overview",

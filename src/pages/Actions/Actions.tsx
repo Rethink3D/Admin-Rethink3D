@@ -7,6 +7,8 @@ import {
   ArrowRight,
   Settings,
   Bell,
+  Flag,
+  RotateCcw,
 } from "lucide-react";
 import { usePageTitle } from "../../contexts/PageTitleContext";
 import "./Actions.css";
@@ -74,8 +76,18 @@ const Actions: React.FC = () => {
       title: "Gerenciar Devoluções",
       description:
         "Analise solicitações de reembolso e tome decisões sobre devoluções de produtos.",
-      icon: Settings,
+      icon: RotateCcw,
       path: "/actions/devolutions",
+      color: "var(--danger)",
+      disabled: false,
+    },
+    {
+      id: "reports",
+      title: "Gerenciar Denúncias",
+      description:
+        "Analise denúncias de produtos e lojas feitas por usuários, gerencie bloqueios e resoluções.",
+      icon: Flag,
+      path: "/actions/reports",
       color: "var(--danger)",
       disabled: false,
     },
