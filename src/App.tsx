@@ -31,6 +31,7 @@ import SendPush from "./pages/Actions/SendPush/SendPush";
 import Devolutions from "./pages/Actions/Devolutions/Devolutions";
 import DevolutionAnalysis from "./pages/Actions/Devolutions/DevolutionAnalysis";
 import Reports from "./pages/Actions/Reports/Reports";
+import MakerPayments from "./pages/Actions/Payments/MakerPayments";
 import CustomRequests from "./pages/CustomRequests/CustomRequests";
 import CustomRequestDetail from "./pages/CustomRequests/CustomRequestDetail";
 import Loading from "./components/shared/Loading";
@@ -125,6 +126,10 @@ const App: React.FC = () => {
                     <Route
                       path="/actions/reports"
                       element={<Reports />}
+                    />
+                    <Route
+                      path="/actions/payments"
+                      element={<MakerPayments />}
                     />
                   </Route>
 

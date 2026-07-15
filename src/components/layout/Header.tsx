@@ -60,6 +60,8 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onToggleMobile }) => {
       setPageTitle("Regras da Plataforma");
     } else if (path === "/actions/feedbacks") {
       setPageTitle("Feedbacks");
+    } else if (path === "/actions/payments") {
+      setPageTitle("Repasses aos Makers");
     } else if (path === "/custom-requests") {
       setPageTitle("Solicitações Customizadas");
     } else if (path.startsWith("/custom-requests/") && params.id) {

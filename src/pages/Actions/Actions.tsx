@@ -9,6 +9,7 @@ import {
   Bell,
   Flag,
   RotateCcw,
+  DollarSign,
 } from "lucide-react";
 import { usePageTitle } from "../../contexts/PageTitleContext";
 import "./Actions.css";
@@ -79,6 +80,16 @@ const Actions: React.FC = () => {
       icon: RotateCcw,
       path: "/actions/devolutions",
       color: "var(--danger)",
+      disabled: false,
+    },
+    {
+      id: "payments",
+      title: "Repasses aos Makers",
+      description:
+        "Reprocesse transferências PIX pendentes que falharam, sem esperar a rotina automática.",
+      icon: DollarSign,
+      path: "/actions/payments",
+      color: "var(--primary)",
       disabled: false,
     },
     {
