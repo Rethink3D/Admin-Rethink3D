@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
     DEVOLUTIONS: "/devolutions",
     CUSTOM_REQUESTS: "/admin/custom-requests",
     REPORTS: "/admin/reports",
+    MAKER_PAYMENTS_RETRY: "/admin/maker-payments/retry",
   },
   ANALYTICS: {
     OVERVIEW: "/analytics/overview",
