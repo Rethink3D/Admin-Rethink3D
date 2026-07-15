@@ -5,7 +5,14 @@ interface AuthenticatedImageProps extends React.ImgHTMLAttributes<HTMLImageEleme
   src: string;
 }
 
+const resolveStorageUrl = (url: string): string => {
+  if (!url || !url.startsWith("/storage/")) return url;
+  const base = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+  return `${base}${url}`;
+};
+
 export const getAuthenticatedUrl = (url: string, token: string | null) => {
+  url = resolveStorageUrl(url);
   if (!token || !url || !url.includes("/storage/")) return url;
 
   const isPrivatePath =
